@@ -1,10 +1,9 @@
 import sgen
 import os
+import shutil
 
 
 def setup_content():
-    import shutil
-
     if os.path.exists(os.path.join(os.getcwd(), 'content_test')):
         shutil.rmtree(os.path.join(os.getcwd(), 'content_test'))
 

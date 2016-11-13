@@ -6,14 +6,61 @@ import htmlmin
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from sconfig import THEME_DIR
+from colorama import init as colorama_init, Fore
 
-env = Environment(loader=FileSystemLoader(os.path.join(os.getcwd(), THEME_DIR)))
+colorama_init(autoreset=True)
+
+try:
+    from sconfig import OUTPUT_DIR
+    output_dir = OUTPUT_DIR
+except ImportError:
+    output_dir = 'output/'
+
+try:
+    from sconfig import CONTENT_DIR
+    content_dir = CONTENT_DIR
+except ImportError:
+    content_dir = 'content/'
 
 
-class Article(object):
+env = Environment(loader=FileSystemLoader(os.path.join(os.getcwd(),
+                                                       THEME_DIR)))
+
+
+class Blogger(object):
+
+    def render_html(self):
+        """
+        Override this method
+        """
+
+    def save_page(self):
+        with open(os.path.join(self.output_dir, self.page_url), 'w') as myfile:
+            myfile.write(self.render_html())
+
+
+class Blog(Blogger):
+    ARTICLES = []
+    page_url = 'index.html'
+
+    def __init__(self, output_dir):
+        self.output_dir = output_dir
+
+    def add_article(self, article):
+        self.ARTICLES = sorted(self.ARTICLES + [article], key=lambda x: x.date)
+
+    def render_html(self):
+        template = env.get_template('index.html')
+        return template.render(
+            articles=self.ARTICLES[::-1]
+        )
+
+
+class Article(Blogger):
     URLS = {}
 
-    def __init__(self, html, title, date, **kwargs):
+    def __init__(self, html, title, date, output_dir, **kwargs):
+        self.output_dir = output_dir
         self.title = title
         self.html = html
         try:
@@ -28,6 +75,7 @@ class Article(object):
         else:
             self.URLS[sep_title] = 1
             self.url = sep_title
+        self.page_url = self.url + '.html'
 
     @staticmethod
     def urlizer(title):
@@ -44,7 +92,7 @@ class Article(object):
 
 def find_content(**kwargs):
     content_dir = kwargs.get('content_dir', 'content/')
-    return glob.glob(os.path.join(content_dir, '*'))
+    return sorted(glob.glob(os.path.join(content_dir, '*')))
 
 
 def compile_html(content_path):
@@ -55,3 +103,23 @@ def compile_html(content_path):
     return htmlmin.minify(html), md.Meta
 
 
+if not os.path.exists(os.path.join(os.getcwd(), output_dir)):
+    print '[*] Making %s.' % output_dir
+    os.makedirs(os.path.join(os.getcwd(), output_dir))
+
+blog = Blog(output_dir)
+
+print Fore.CYAN + '[*] Buidling content.'
+
+for content in find_content(content_dir='content'):
+    html_content, meta_content = compile_html(
+        content
+    )
+    article = Article(html_content, title=meta_content['title'][0],
+                      date=meta_content['date'][0], output_dir=output_dir)
+
+    article.save_page()
+    blog.add_article(article)
+
+print '[*] Linking the index.'
+blog.save_page()

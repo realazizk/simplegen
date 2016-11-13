@@ -1,0 +1,11 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+  {% for eachArticle in articles %}
+    <div>
+      <a href="{{ eachArticle.url }}"> {{ eachArticle.title }} </h1>
+    </div>
+    <hr>
+  {% endfor %}
+{% endblock %}
