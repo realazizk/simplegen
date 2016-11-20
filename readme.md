@@ -2,12 +2,12 @@
 
 ## simpleGen
 
-simpleGen *is a simple page generator* I work on sunday nights for about one hour.
+simpleGen *is a simple static website/blog generator* I work on, on sundays.
 
 ### Todo
 
 - [ ] Write tests.
-- [ ] Make a paging system.
+- [X] Make a paging system.
 - [ ] Transform it into a package.
   - [ ] Upload it to pypi.
   - [ ] Use armin's click.
