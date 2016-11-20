@@ -1,4 +1,3 @@
-
 import glob
 import os
 import markdown
@@ -7,6 +6,7 @@ from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from sconfig import THEME_DIR
 from colorama import init as colorama_init, Fore
+from math import ceil
 
 colorama_init(autoreset=True)
 
@@ -22,13 +22,17 @@ try:
 except ImportError:
     content_dir = 'content/'
 
+try:
+    from sconfig import PAGINATOR_MAX
+    per_page = PAGINATOR_MAX
+except ImportError:
+    per_page = 20
 
-env = Environment(loader=FileSystemLoader(os.path.join(os.getcwd(),
-                                                       THEME_DIR)))
+env = Environment(
+    loader=FileSystemLoader(os.path.join(os.getcwd(), THEME_DIR)))
 
 
 class Blogger(object):
-
     def render_html(self):
         """
         Override this method
@@ -37,6 +41,36 @@ class Blogger(object):
     def save_page(self):
         with open(os.path.join(self.output_dir, self.page_url), 'w') as myfile:
             myfile.write(self.render_html())
+
+
+class Paginator(object):
+    def __init__(self, curr_page, articles, per_page):
+        self.curr_page = curr_page
+        self.articles = articles
+        self.per_page = per_page
+
+    def pages(self):
+        return int(ceil(len(self.articles) / float(self.per_page)))
+
+    def has_prev(self):
+        return self.curr_page > 1
+
+    def has_next(self):
+        return self.curr_page < self.pages()
+
+    def page_content(self):
+        return self.articles[(self.curr_page - 1) * self.per_page:
+                             self.curr_page * self.per_page]
+
+    def next(self):
+        if self.has_next():
+            return str(self.curr_page + 1)
+
+    def previous(self):
+        if self.has_prev():
+            if self.curr_page == 2:
+                return ''
+            return str(self.curr_page - 1)
 
 
 class Blog(Blogger):
@@ -49,11 +83,19 @@ class Blog(Blogger):
     def add_article(self, article):
         self.ARTICLES = sorted(self.ARTICLES + [article], key=lambda x: x.date)
 
-    def render_html(self):
+    def render_html(self, paginator):
         template = env.get_template('index.html')
-        return template.render(
-            articles=self.ARTICLES[::-1]
-        )
+        return template.render(paginator=paginator)
+
+    def save_page(self):
+        for page in range(1,
+                          int(ceil(len(self.ARTICLES) / float(per_page))) + 1):
+            paginator = Paginator(page, self.ARTICLES, per_page)
+            if (page != 1):
+                self.page_url = 'index%i.html' % page
+            with open(os.path.join(self.output_dir, self.page_url),
+                      'w') as myfile:
+                myfile.write(self.render_html(paginator))
 
 
 class Article(Blogger):
@@ -86,8 +128,7 @@ class Article(Blogger):
         return template.render(
             article_content=self.html,
             article_title=self.title,
-            article_date=self.date.strftime('%d/%m/%Y %H:%M')
-        )
+            article_date=self.date.strftime('%d/%m/%Y %H:%M'))
 
 
 def find_content(**kwargs):
@@ -97,8 +138,7 @@ def find_content(**kwargs):
 
 def compile_html(content_path):
     md = markdown.Markdown(extensions=['markdown.extensions.meta'])
-    html = md.convert(
-        open(content_path, 'r').read())
+    html = md.convert(open(content_path, 'r').read())
 
     return htmlmin.minify(html), md.Meta
 
@@ -112,11 +152,12 @@ blog = Blog(output_dir)
 print Fore.CYAN + '[*] Buidling content.'
 
 for content in find_content(content_dir='content'):
-    html_content, meta_content = compile_html(
-        content
-    )
-    article = Article(html_content, title=meta_content['title'][0],
-                      date=meta_content['date'][0], output_dir=output_dir)
+    html_content, meta_content = compile_html(content)
+    article = Article(
+        html_content,
+        title=meta_content['title'][0],
+        date=meta_content['date'][0],
+        output_dir=output_dir)
 
     article.save_page()
     blog.add_article(article)

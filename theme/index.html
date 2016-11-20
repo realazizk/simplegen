@@ -2,10 +2,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% for eachArticle in articles %}
+  {% for eachArticle in paginator.page_content() %}
     <div>
-      <a href="{{ eachArticle.url }}"> {{ eachArticle.title }} </h1>
+      <a href="{{ eachArticle.url }}.html"> {{ eachArticle.title }} </h1>
     </div>
     <hr>
-  {% endfor %}
+    {% endfor %}
+    {%  if paginator.has_prev() %}
+      <a href="index{{ paginator.previous()}}.html">  Prev </a>
+    {% endif %}
+    {%  if paginator.has_next() %}
+      <a href="index{{ paginator.next() }}.html"> Next </a>
+    {% endif %}
+
 {% endblock %}
