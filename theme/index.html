@@ -1,18 +1,39 @@
 
 {% extends "base.html" %}
 
+
 {% block content %}
-  {% for eachArticle in paginator.page_content() %}
-    <div>
-      <a href="{{ eachArticle.url }}.html"> {{ eachArticle.title }} </h1>
-    </div>
-    <hr>
-    {% endfor %}
-    {%  if paginator.has_prev() %}
-      <a href="index{{ paginator.previous()}}.html">  Prev </a>
+
+<div class="posts">
+  {% for article in paginator.page_content() %}
+  <div class="post">
+    <h1 class="post-title">
+      <a href="{{ article.page_url }}">
+        {{ article.title }}
+      </a>
+    </h1>
+
+    <span class="post-date">{{ article.date  }}</span>
+
+    {{ article.html }}
+  </div>
+  {% endfor %}
+</div>
+
+<div class="pagination">
+    
+  {% if paginator.has_prev() %}
+      <a class="pagination-item newer" href="index{{ paginator.previous()}}.html">Newer</a>
+  {% else %}
+    <span class="pagination-item newer">Newer</span>
     {% endif %}
-    {%  if paginator.has_next() %}
-      <a href="index{{ paginator.next() }}.html"> Next </a>
-    {% endif %}
+
+  {% if paginator.has_next() %}
+    <a class="pagination-item older" href="index{{ paginator.next()}}.html">Older</a>
+  {% else %}
+    <span class="pagination-item older">Older</span>
+  {% endif %}
+
+</div>
 
 {% endblock %}

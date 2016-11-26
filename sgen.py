@@ -7,8 +7,16 @@ from jinja2 import Environment, FileSystemLoader
 from sconfig import THEME_DIR
 from colorama import init as colorama_init, Fore
 from math import ceil
+import shutil
+
 
 colorama_init(autoreset=True)
+
+try:
+    from sconfig import *
+except ImportError:
+    pass
+
 
 try:
     from sconfig import OUTPUT_DIR
@@ -28,8 +36,11 @@ try:
 except ImportError:
     per_page = 20
 
+    
 env = Environment(
     loader=FileSystemLoader(os.path.join(os.getcwd(), THEME_DIR)))
+
+env.globals = dict(env.globals.items() + globals().items())
 
 
 class Blogger(object):
@@ -88,6 +99,7 @@ class Blog(Blogger):
         return template.render(paginator=paginator)
 
     def save_page(self):
+        self.ARTICLES = self.ARTICLES[::-1]
         for page in range(1,
                           int(ceil(len(self.ARTICLES) / float(per_page))) + 1):
             paginator = Paginator(page, self.ARTICLES, per_page)
@@ -133,7 +145,8 @@ class Article(Blogger):
 
 def find_content(**kwargs):
     content_dir = kwargs.get('content_dir', 'content/')
-    return sorted(glob.glob(os.path.join(content_dir, '*')))
+    # returns all markdown files.
+    return sorted(glob.glob(os.path.join(content_dir, '*.md')))
 
 
 def compile_html(content_path):
@@ -149,7 +162,14 @@ if not os.path.exists(os.path.join(os.getcwd(), output_dir)):
 
 blog = Blog(output_dir)
 
-print Fore.CYAN + '[*] Buidling content.'
+
+print Fore.YELLOW + '[*] Cleaning output dir.'
+
+if os.path.exists(os.path.join(os.getcwd(), output_dir)):
+    shutil.rmtree(os.path.join(os.getcwd(), output_dir))
+    os.mkdir(os.path.join(os.getcwd(), output_dir))
+
+print Fore.YELLOW + '[*] Buidling content.'
 
 for content in find_content(content_dir='content'):
     html_content, meta_content = compile_html(content)
@@ -162,5 +182,11 @@ for content in find_content(content_dir='content'):
     article.save_page()
     blog.add_article(article)
 
-print '[*] Linking the index.'
+print Fore.YELLOW + '[*] Linking the index.'
 blog.save_page()
+
+if os.path.exists(os.path.join(os.getcwd(), THEME_DIR, 'assets')):
+    print Fore.YELLOW + '[*] Copying static files.'
+    shutil.copytree(os.path.join(os.getcwd(), THEME_DIR, 'assets'),
+                    os.path.join(os.getcwd(), output_dir, 'assets'))
+

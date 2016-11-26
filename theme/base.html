@@ -2,20 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %} Just another blog {% endblock %}</title>
 
-    {% block style %}
-    {% endblock %}
+    {% include 'header.html' %}
 </head>
-<body>
-
-  {% block jsfiles %}
-  {% endblock %}
+<body class="theme-base-08">
   
   {% block body %}
-    {% block content %}
-    {% endblock %}
 
+    {% include 'sidebar.html' %}
+  
+    <div class="content container">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+  
   {% endblock %}
 </body>
 </html>
