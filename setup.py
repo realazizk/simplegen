@@ -7,7 +7,7 @@ reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
     name='simplegen',
-    version='0.0.1',
+    version='0.0.2',
     install_requires=reqs,
     url='https://github.com/mohamed-aziz/simplegen',
     license='GPLV3',
@@ -21,5 +21,8 @@ setup(
             'makesite=simplegen.cli:makesite',
             'initsite=simplegen.cli:initsite'
         ]
+    },
+    package_date={
+        '': ['requirements.txt', 'readme.md', 'requirements_dev.txt']
     },
 )
