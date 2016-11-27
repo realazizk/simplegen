@@ -1,5 +1,7 @@
+import sys
 import glob
 import os
+sys.path.append(os.getcwd())
 import markdown
 import htmlmin
 from datetime import datetime
@@ -36,9 +38,9 @@ try:
 except ImportError:
     per_page = 20
 
-    
+
 env = Environment(
-    loader=FileSystemLoader(os.path.join(os.getcwd(), THEME_DIR)))
+    loader=FileSystemLoader(THEME_DIR))
 
 env.globals = dict(env.globals.items() + globals().items())
 
@@ -156,37 +158,36 @@ def compile_html(content_path):
     return htmlmin.minify(html), md.Meta
 
 
-if not os.path.exists(os.path.join(os.getcwd(), output_dir)):
-    print '[*] Making %s.' % output_dir
-    os.makedirs(os.path.join(os.getcwd(), output_dir))
+def make():
+    if not os.path.exists(output_dir):
+        print '[*] Making %s.' % output_dir
+        os.makedirs(output_dir)
 
-blog = Blog(output_dir)
+    blog = Blog(output_dir)
 
+    print Fore.YELLOW + '[*] Cleaning output dir.'
 
-print Fore.YELLOW + '[*] Cleaning output dir.'
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
+        os.mkdir(output_dir)
 
-if os.path.exists(os.path.join(os.getcwd(), output_dir)):
-    shutil.rmtree(os.path.join(os.getcwd(), output_dir))
-    os.mkdir(os.path.join(os.getcwd(), output_dir))
+    print Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir))
 
-print Fore.YELLOW + '[*] Buidling content.'
+    for content in find_content(content_dir=content_dir):
+        html_content, meta_content = compile_html(content)
+        article = Article(
+            html_content,
+            title=meta_content['title'][0],
+            date=meta_content['date'][0],
+            output_dir=output_dir)
 
-for content in find_content(content_dir='content'):
-    html_content, meta_content = compile_html(content)
-    article = Article(
-        html_content,
-        title=meta_content['title'][0],
-        date=meta_content['date'][0],
-        output_dir=output_dir)
+        article.save_page()
+        blog.add_article(article)
 
-    article.save_page()
-    blog.add_article(article)
+    print Fore.YELLOW + '[*] Linking the index.'
+    blog.save_page()
 
-print Fore.YELLOW + '[*] Linking the index.'
-blog.save_page()
-
-if os.path.exists(os.path.join(os.getcwd(), THEME_DIR, 'assets')):
-    print Fore.YELLOW + '[*] Copying static files.'
-    shutil.copytree(os.path.join(os.getcwd(), THEME_DIR, 'assets'),
-                    os.path.join(os.getcwd(), output_dir, 'assets'))
-
+    if os.path.exists(os.path.join(THEME_DIR, 'assets')):
+        print Fore.YELLOW + '[*] Copying static files.'
+        shutil.copytree(os.path.join(THEME_DIR, 'assets'),
+                        os.path.join(output_dir, 'assets'))
