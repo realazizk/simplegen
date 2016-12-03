@@ -158,6 +158,17 @@ def compile_html(content_path):
     return htmlmin.minify(html), md.Meta
 
 
+def remove_it(nodename):
+    """
+    Keyword Arguments:
+    nodename -- the node name
+    """
+    try:
+        os.unlink(nodename)
+    except OSError:
+        shutil.rmtree(nodename)
+
+
 def make():
     if not os.path.exists(output_dir):
         print '[*] Making %s.' % output_dir
@@ -168,8 +179,7 @@ def make():
     print Fore.YELLOW + '[*] Cleaning output dir.'
 
     if os.path.exists(output_dir):
-        shutil.rmtree(output_dir)
-        os.mkdir(output_dir)
+        map(remove_it, glob.glob(os.path.join(output_dir, '*')))
 
     print Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir))
 
