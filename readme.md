@@ -100,7 +100,8 @@ My folder looks like this:
 	│   └── someotherfile.md
 	├── output
 	│   ├── somefile.html
-	│   └── someotherfile.html
+	│   ├── someotherfile.html
+	│   └── index.html
 	└── sconfig.py
 
 
