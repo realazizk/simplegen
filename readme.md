@@ -33,4 +33,4 @@ deploying your website is up to you, I myself use git submodules and github page
 - [X] Transform it into a package.
   - [X] Upload it to pypi.
   - [X] Use armin's click.
-- [ ] Support Python3.
+- [X] Support Python3.
