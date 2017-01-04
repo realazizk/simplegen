@@ -15,7 +15,7 @@ import shutil # noqa
 colorama_init(autoreset=True)
 
 try:
-    from sconfig import *
+    from sconfig import * # noqa
 except ImportError:
     pass
 
