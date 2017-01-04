@@ -91,6 +91,19 @@ So for deploying I have written this shell script:
 	git commit -m "New deploy"
 	git push origin master
 
+My folder looks like this:
+
+	.
+	├── build.sh
+	├── content
+	│   ├── somefile.md
+	│   └── someotherfile.md
+	├── output
+	│   ├── somefile.html
+	│   └── someotherfile.html
+	└── sconfig.py
+
+
 I also version control my markdown files which is also nice.
 
 If you don't like git (or versioning) just write some fabric file to do the deploy for your site. 
