@@ -2,14 +2,14 @@ import sys
 import glob
 import os
 sys.path.append(os.getcwd())
-import markdown
-import htmlmin
-from datetime import datetime
-from jinja2 import Environment, FileSystemLoader
-from sconfig import THEME_DIR
-from colorama import init as colorama_init, Fore
-from math import ceil
-import shutil
+import markdown # noqa
+import htmlmin # noqa
+from datetime import datetime # noqa
+from jinja2 import Environment, FileSystemLoader # noqa
+from sconfig import THEME_DIR # noqa
+from colorama import init as colorama_init, Fore # noqa
+from math import ceil # noqa
+import shutil # noqa
 
 
 colorama_init(autoreset=True)
