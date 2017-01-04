@@ -14,5 +14,5 @@ def initsite(input_dir, output_dir):
 
 @click.command()
 def makesite():
-    from simplegen import make
+    from .simplegen import make
     make()

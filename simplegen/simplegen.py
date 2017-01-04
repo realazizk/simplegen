@@ -42,7 +42,7 @@ except ImportError:
 env = Environment(
     loader=FileSystemLoader(THEME_DIR))
 
-env.globals = dict(env.globals.items() + globals().items())
+env.globals.update(globals())
 
 
 class Blogger(object):
@@ -171,17 +171,17 @@ def remove_it(nodename):
 
 def make():
     if not os.path.exists(output_dir):
-        print '[*] Making %s.' % output_dir
+        print('[*] Making %s.' % output_dir)
         os.makedirs(output_dir)
 
     blog = Blog(output_dir)
 
-    print Fore.YELLOW + '[*] Cleaning output dir.'
+    print(Fore.YELLOW + '[*] Cleaning output dir.')
 
     if os.path.exists(output_dir):
         map(remove_it, glob.glob(os.path.join(output_dir, '*')))
 
-    print Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir))
+    print(Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir)))
 
     for content in find_content(content_dir=content_dir):
         html_content, meta_content = compile_html(content)
@@ -194,10 +194,10 @@ def make():
         article.save_page()
         blog.add_article(article)
 
-    print Fore.YELLOW + '[*] Linking the index.'
+    print(Fore.YELLOW + '[*] Linking the index.')
     blog.save_page()
 
     if os.path.exists(os.path.join(THEME_DIR, 'assets')):
-        print Fore.YELLOW + '[*] Copying static files.'
+        print(Fore.YELLOW + '[*] Copying static files.')
         shutil.copytree(os.path.join(THEME_DIR, 'assets'),
                         os.path.join(output_dir, 'assets'))
