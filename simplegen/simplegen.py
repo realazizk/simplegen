@@ -15,6 +15,7 @@ import shutil # noqa
 colorama_init(autoreset=True)
 
 try:
+    # dirty but needed to register to the environment scope
     from sconfig import * # noqa
 except ImportError:
     pass
@@ -42,6 +43,7 @@ except ImportError:
 env = Environment(
     loader=FileSystemLoader(THEME_DIR))
 
+# add the global variable scope to the environment scope
 env.globals.update(globals())
 
 
@@ -63,23 +65,41 @@ class Paginator(object):
         self.per_page = per_page
 
     def pages(self):
+        """
+        Returns the number of pages.
+        """
         return int(ceil(len(self.articles) / float(self.per_page)))
 
     def has_prev(self):
+        """
+        Does a curr_page have a previous page?
+        """
         return self.curr_page > 1
 
     def has_next(self):
+        """
+        Does a curr_page have a next page?
+        """
         return self.curr_page < self.pages()
 
     def page_content(self):
+        """
+        Returns the content that needs to be in some curr_page
+        """
         return self.articles[(self.curr_page - 1) * self.per_page:
                              self.curr_page * self.per_page]
 
     def next(self):
+        """
+        Returns the name of the next page.
+        """
         if self.has_next():
             return str(self.curr_page + 1)
 
     def previous(self):
+        """
+        Returns the name of the previous page.
+        """
         if self.has_prev():
             if self.curr_page == 2:
                 return ''
@@ -94,6 +114,8 @@ class Blog(Blogger):
         self.output_dir = output_dir
 
     def add_article(self, article):
+        # TODO: can get much better perfomance by just keeping the list of articles sorted
+        # sort by date
         self.ARTICLES = sorted(self.ARTICLES + [article], key=lambda x: x.date)
 
     def render_html(self, paginator):
@@ -120,10 +142,14 @@ class Article(Blogger):
         self.title = title
         self.html = html
         try:
+            # TODO: Change this hardcoded date layout
             self.date = datetime.strptime(date, '%d/%m/%Y %H:%M')
         except ValueError:
             raise ValueError('Your date is not well structured')
 
+        # sharing the URLS variable between all article instances and
+        # saving all maked slugs, if it already exists just add the number
+        # simple mechanism but it works
         sep_title = self.urlizer(self.title)
         if sep_title in self.URLS:
             self.URLS[sep_title] += 1
@@ -135,9 +161,16 @@ class Article(Blogger):
 
     @staticmethod
     def urlizer(title):
+        """
+        This just a fancy name for a simple slug method.
+
+        Keyword Arguments:
+        title -- the actual title to make a slug
+        """
         return '-'.join(title.lower().split())
 
     def render_html(self):
+        # TODO: Change this hardcoded article file name.
         template = env.get_template('article.html')
         return template.render(
             article_content=self.html,
@@ -145,13 +178,26 @@ class Article(Blogger):
             article_date=self.date.strftime('%d/%m/%Y %H:%M'))
 
 
-def find_content(**kwargs):
-    content_dir = kwargs.get('content_dir', 'content/')
-    # returns all markdown files.
+def find_content(content_dir):
+    """
+    Returns all markdown files.
+
+    Keyword Arguments:
+    content_dir -- the path of the content to make.
+    """
+
     return sorted(glob.glob(os.path.join(content_dir, '*.md')))
 
 
 def compile_html(content_path):
+    """
+    Actually compiles the markdown into html files and minfies them.
+    Returns a tuple of minfied html and the markdown metadata.
+
+    Keyword Arguments:
+    content_path -- the path of the content to make.
+    """
+
     md = markdown.Markdown(extensions=['markdown.extensions.meta'])
     html = md.convert(open(content_path, 'r').read())
 
@@ -160,9 +206,13 @@ def compile_html(content_path):
 
 def remove_it(nodename):
     """
+    Removes a nodename, if it's a file it justs removes it,
+    if it's a directory it recursively deletes it.
+
     Keyword Arguments:
     nodename -- the node name
     """
+
     try:
         os.unlink(nodename)
     except OSError:
@@ -170,6 +220,10 @@ def remove_it(nodename):
 
 
 def make():
+    """
+    Makes the stuff baby :)
+    """
+
     if not os.path.exists(output_dir):
         print('[*] Making %s.' % output_dir)
         os.makedirs(output_dir)
