@@ -233,7 +233,8 @@ def make():
     print(Fore.YELLOW + '[*] Cleaning output dir.')
 
     if os.path.exists(output_dir):
-        map(remove_it, glob.glob(os.path.join(output_dir, '*')))
+        for node in glob.glob(os.path.join(output_dir, '*')):
+            remove_it(node)
 
     print(Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir)))
 
