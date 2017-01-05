@@ -141,11 +141,7 @@ class Article(Blogger):
         self.output_dir = output_dir
         self.title = title
         self.html = html
-        try:
-            # TODO: Change this hardcoded date layout
-            self.date = datetime.strptime(date, '%d/%m/%Y %H:%M')
-        except ValueError:
-            raise ValueError('Your date is not well structured')
+        self.date = date
 
         # sharing the URLS variable between all article instances and
         # saving all maked slugs, if it already exists just add the number
