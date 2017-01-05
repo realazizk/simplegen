@@ -141,7 +141,11 @@ class Article(Blogger):
         self.output_dir = output_dir
         self.title = title
         self.html = html
-        self.date = date
+        try:
+            # TODO: Change this hardcoded date layout
+            self.date = datetime.strptime(date, '%d/%m/%Y %H:%M')
+        except ValueError:
+            raise ValueError('Your date is not well structured')
 
         # sharing the URLS variable between all article instances and
         # saving all maked slugs, if it already exists just add the number
@@ -171,7 +175,7 @@ class Article(Blogger):
         return template.render(
             article_content=self.html,
             article_title=self.title,
-            article_date=self.date.strftime('%d/%m/%Y %H:%M'))
+            article_date=self.date)
 
 
 def find_content(content_dir):
