@@ -109,15 +109,27 @@ I also version control my markdown files which is also nice.
 
 If you don't like git (or versioning) just write some fabric file to do the deploy for your site. 
 
+### Testing
+
+You can test the code using:
+	
+	$ git clone https://github.com/mohamed-aziz/simplegen.git
+	$ cd simplegen
+	// optional
+	$ mkvirtualenv testing-simplegen
+	$ cd simplegen
+	$ pip install -r requirements.txt
+	$ python setup.py test
+
 
 ### Get in touch
 
-If you like simpleGen and use it for your website, I would be pleased if you let me know.
+If you like simpleGen and use it for your website, I would be pleased if you let me know, also pull requests are welcome :)
 
 
 ### Todo
 
-- [ ] Write tests.
+- [X] Write tests.
 - [X] Make a paging system.
 - [X] Transform it into a package.
   - [X] Upload it to pypi.
