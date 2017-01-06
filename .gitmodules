@@ -1,0 +1,3 @@
+[submodule "example_path"]
+	path = example_path
+	url = git@github.com:mohamed-aziz/simplegen-hyde.git
