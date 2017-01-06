@@ -118,7 +118,7 @@ You can test the code using:
 	// optional
 	$ mkvirtualenv testing-simplegen
 	$ cd simplegen
-	$ pip install -r requirements.txt
+	$ pip install -r requirements_dev.txt
 	$ python setup.py test
 
 
