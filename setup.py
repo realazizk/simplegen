@@ -9,6 +9,8 @@ setup(
     name='simplegen',
     version='0.0.2',
     install_requires=reqs,
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
     url='https://github.com/mohamed-aziz/simplegen',
     license='GPLV3',
     author='Mohamed Aziz Knani',
