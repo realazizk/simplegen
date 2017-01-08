@@ -204,7 +204,8 @@ def compile_html(content_path):
     content_path -- the path of the content to make.
     """
 
-    md = markdown.Markdown(extensions=['markdown.extensions.meta'])
+    md = markdown.Markdown(extensions=['markdown.extensions.meta',
+                                       'markdown.extensions.fenced_code'])
     html = md.convert(open(content_path, 'r').read())
 
     return htmlmin.minify(html), md.Meta
