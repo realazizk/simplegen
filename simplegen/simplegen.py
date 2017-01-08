@@ -61,6 +61,67 @@ from markdown.extensions.codehilite import CodeHiliteExtension # noqa
 codehilite = CodeHiliteExtension(linenums=False)
 
 
+##
+# Helper functions
+##
+
+
+def find_content(content_dir):
+    """
+    Returns all markdown files.
+
+    Keyword Arguments:
+    content_dir -- the path of the content to make.
+    """
+
+    return sorted(glob.glob(os.path.join(content_dir, '*.md')))
+
+
+def compile_html(content_path):
+    """
+    Actually compiles the markdown into html files and minfies them.
+    Returns a tuple of minfied html and the markdown metadata.
+
+    Keyword Arguments:
+    content_path -- the path of the content to make.
+    """
+
+    md = markdown.Markdown(extensions=['markdown.extensions.meta', codehilite])
+    html = md.convert(open(content_path, 'r').read())
+
+    return html, md.Meta
+
+
+def remove_it(nodename):
+    """
+    Removes a nodename, if it's a file it justs removes it,
+    if it's a directory it recursively deletes it.
+
+    Keyword Arguments:
+    nodename -- the node name
+    """
+
+    try:
+        os.unlink(nodename)
+    except OSError:
+        shutil.rmtree(nodename)
+
+
+def _print(*args, **kwargs):
+    if not kwargs['quite']:
+        print(*args)
+
+
+def minify(func):
+    def wrapper(*args):
+        return htmlmin.minify(func(*args))
+    return wrapper
+
+##
+# Core functioning stuff
+##
+
+
 class Blogger(object):
     def render_html(self):
         """
@@ -132,6 +193,7 @@ class Blog(Blogger):
         # sort by date
         self.ARTICLES = sorted(self.ARTICLES + [article], key=lambda x: x.date)
 
+    @minify
     def render_html(self, paginator):
         template = env.get_template('index.html')
         return template.render(paginator=paginator)
@@ -183,6 +245,7 @@ class Article(Blogger):
         """
         return '-'.join(title.lower().split())
 
+    @minify
     def render_html(self):
         # TODO: Change this hardcoded article file name.
         template = env.get_template('article.html')
@@ -190,52 +253,6 @@ class Article(Blogger):
             article_content=self.html,
             article_title=self.title,
             article_date=self.date)
-
-
-def find_content(content_dir):
-    """
-    Returns all markdown files.
-
-    Keyword Arguments:
-    content_dir -- the path of the content to make.
-    """
-
-    return sorted(glob.glob(os.path.join(content_dir, '*.md')))
-
-
-def compile_html(content_path):
-    """
-    Actually compiles the markdown into html files and minfies them.
-    Returns a tuple of minfied html and the markdown metadata.
-
-    Keyword Arguments:
-    content_path -- the path of the content to make.
-    """
-
-    md = markdown.Markdown(extensions=['markdown.extensions.meta', codehilite])
-    html = md.convert(open(content_path, 'r').read())
-
-    return htmlmin.minify(html), md.Meta
-
-
-def remove_it(nodename):
-    """
-    Removes a nodename, if it's a file it justs removes it,
-    if it's a directory it recursively deletes it.
-
-    Keyword Arguments:
-    nodename -- the node name
-    """
-
-    try:
-        os.unlink(nodename)
-    except OSError:
-        shutil.rmtree(nodename)
-
-
-def _print(*args, **kwargs):
-    if not kwargs['quite']:
-        print(*args)
 
 
 def make(quite=False):
