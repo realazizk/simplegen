@@ -113,12 +113,9 @@ If you don't like git (or versioning) just write some fabric file to do the depl
 
 You can test the code using:
 	
+	$ mktmpenv
 	$ git clone https://github.com/mohamed-aziz/simplegen.git
 	$ cd simplegen
-	// optional
-	$ mkvirtualenv testing-simplegen
-	$ cd simplegen
-	$ pip install -r requirements_dev.txt
 	$ python setup.py test
 
 
