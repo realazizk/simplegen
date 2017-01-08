@@ -52,6 +52,7 @@ CONTENT_DIR | String | "content/" | From where to get the input
 OUTPUT_DIR | String | "output/" | Where to save the output
 PAGINATOR_MAX | Int | 20 | How many articles per page
 MINIFY_HTML | Boolean | False | Minify the ouptput HTML
+ASSETS_PATH | String | None | The path of the user assets
 
 
 ### Making themes
