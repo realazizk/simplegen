@@ -5,6 +5,7 @@ import os
 sys.path.append(os.getcwd())
 import markdown # noqa
 import htmlmin # noqa
+from six import PY2 # noqa
 from datetime import datetime # noqa
 from jinja2 import Environment, FileSystemLoader # noqa
 from sconfig import THEME_DIR # noqa
@@ -12,6 +13,10 @@ from colorama import init as colorama_init, Fore # noqa
 from math import ceil # noqa
 import shutil # noqa
 
+
+if PY2:
+    reload(sys) # noqa
+    sys.setdefaultencoding('utf8')
 
 colorama_init(autoreset=True)
 
