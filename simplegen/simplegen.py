@@ -205,7 +205,7 @@ def compile_html(content_path):
     """
 
     md = markdown.Markdown(extensions=['markdown.extensions.meta',
-                                       'markdown.extensions.code_hilite'])
+                                       'markdown.extensions.codehilite'])
     html = md.convert(open(content_path, 'r').read())
 
     return htmlmin.minify(html), md.Meta
