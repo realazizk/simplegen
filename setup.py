@@ -7,7 +7,7 @@ reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
     name='simplegen',
-    version='0.0.3',
+    version='0.0.4',
     install_requires=reqs,
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
@@ -15,7 +15,7 @@ setup(
     license='GPLV3',
     author='Mohamed Aziz Knani',
     author_email='medazizknani@gmail.com',
-    description='Simple site generator for my site.',
+    description='Simple site generator.',
     packages=['simplegen'],
     include_package_data=True,
     entry_points={
@@ -27,4 +27,22 @@ setup(
     package_date={
         '': ['requirements.txt', 'readme.md', 'requirements_dev.txt']
     },
+
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Build Tools',
+
+        'License :: OSI Approved :: GPLV3 License',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+    ],
+
+    keywords='static website generator simple markdown',
+
 )
