@@ -42,6 +42,18 @@ to actually generate your content.
 deploying your website is up to you, I myself use git submodules and github pages.
 
 
+### Config options
+
+You can define any option really to use in your template, but these are the ones that simplegen knows.
+
+Option name | Type | Default Value | Description
+--- | --- | --- | ---
+CONTENT_DIR | String | "content/" | From where to get the input
+OUTPUT_DIR | String | "/output" | Where to save the output
+PAGINATOR_MAX | Int | 20 | How many articles per page
+MINIFY_HTML | Boolean | False | Minify the ouptput HTML
+
+
 ### Making themes
 
 simpleGen uses [jinja2](http://jinja.pocoo.org/) as its templating language so making themes should be fairly easy.
