@@ -49,7 +49,7 @@ You can define any option really to use in your template, but these are the ones
 Option name | Type | Default Value | Description
 --- | --- | --- | ---
 CONTENT_DIR | String | "content/" | From where to get the input
-OUTPUT_DIR | String | "/output" | Where to save the output
+OUTPUT_DIR | String | "output/" | Where to save the output
 PAGINATOR_MAX | Int | 20 | How many articles per page
 MINIFY_HTML | Boolean | False | Minify the ouptput HTML
 
