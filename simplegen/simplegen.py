@@ -4,7 +4,6 @@ import glob
 import os
 sys.path.append(os.getcwd())
 import markdown # noqa
-from markdown.extensions.codehilite import CodeHilite # noqa
 import htmlmin # noqa
 from six import PY2 # noqa
 from datetime import datetime # noqa
@@ -52,6 +51,14 @@ env = Environment(
 
 # add the global variable scope to the environment scope
 env.globals.update(globals())
+
+
+##
+# Markdown extensions should be inited here
+##
+
+from markdown.extensions.codehilite import CodeHiliteExtension # noqa
+codehilite = CodeHiliteExtension(linenums=False)
 
 
 class Blogger(object):
@@ -205,8 +212,7 @@ def compile_html(content_path):
     content_path -- the path of the content to make.
     """
 
-    md = markdown.Markdown(extensions=['markdown.extensions.meta',
-                                       CodeHilite(linenums=False)])
+    md = markdown.Markdown(extensions=['markdown.extensions.meta', codehilite])
     html = md.convert(open(content_path, 'r').read())
 
     return htmlmin.minify(html), md.Meta
