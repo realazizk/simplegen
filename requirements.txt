@@ -16,3 +16,4 @@ prompt-toolkit==1.0.9
 simplegeneric==0.8.1
 six==1.10.0
 traitlets==4.3.1
+Pygments==2.1.3
