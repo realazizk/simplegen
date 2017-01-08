@@ -219,8 +219,8 @@ def remove_it(nodename):
         shutil.rmtree(nodename)
 
 
-def _print(*args, quite=False):
-    if not quite:
+def _print(*args, **kwargs):
+    if not kwargs['quite']:
         print(*args)
 
 
