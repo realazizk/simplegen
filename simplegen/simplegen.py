@@ -4,6 +4,7 @@ import glob
 import os
 sys.path.append(os.getcwd())
 import markdown # noqa
+from markdown.extensions.codehilite import CodeHilite # noqa
 import htmlmin # noqa
 from six import PY2 # noqa
 from datetime import datetime # noqa
@@ -205,7 +206,7 @@ def compile_html(content_path):
     """
 
     md = markdown.Markdown(extensions=['markdown.extensions.meta',
-                                       'markdown.extensions.codehilite'])
+                                       CodeHilite(linenums=False)])
     html = md.convert(open(content_path, 'r').read())
 
     return htmlmin.minify(html), md.Meta
