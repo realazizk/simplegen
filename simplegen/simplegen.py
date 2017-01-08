@@ -219,24 +219,32 @@ def remove_it(nodename):
         shutil.rmtree(nodename)
 
 
-def make():
+def _print(*args, quite=False):
+    if not quite:
+        print(*args)
+
+
+def make(quite=False):
     """
     Makes the stuff baby :)
+    quite -- for testing ?
     """
 
     if not os.path.exists(output_dir):
-        print('[*] Making %s.' % output_dir)
+        _print('[*] Making %s.' % output_dir, quite=quite)
         os.makedirs(output_dir)
 
     blog = Blog(output_dir)
 
-    print(Fore.YELLOW + '[*] Cleaning output dir.')
+    _print(Fore.YELLOW + '[*] Cleaning output dir.', quite=quite)
 
     if os.path.exists(output_dir):
         for node in glob.glob(os.path.join(output_dir, '*')):
             remove_it(node)
 
-    print(Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir)))
+    _print(Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir)),
+           quite=quite
+    )
 
     for content in find_content(content_dir=content_dir):
         html_content, meta_content = compile_html(content)
@@ -249,10 +257,21 @@ def make():
         article.save_page()
         blog.add_article(article)
 
-    print(Fore.YELLOW + '[*] Linking the index.')
+    _print(Fore.YELLOW + '[*] Linking the index.', quite=quite)
     blog.save_page()
 
     if os.path.exists(os.path.join(THEME_DIR, 'assets')):
-        print(Fore.YELLOW + '[*] Copying static files.')
+        _print(Fore.YELLOW + '[*] Copying static files.', quite=quite)
         shutil.copytree(os.path.join(THEME_DIR, 'assets'),
                         os.path.join(output_dir, 'assets'))
+
+    try:
+        ASSETS_PATH # noqa
+        _print(Fore.YELLOW + '[*] Copying users static files.', quite=quite)
+        if not os.path.exists(os.path.join(output_dir, 'assets')):
+            shutil.copytree(ASSETS_PATH, os.path.join(output_dir, 'assets')) # noqa
+        else:
+            from distutils.dir_util import copy_tree # noqa
+            copy_tree(ASSETS_PATH, os.path.join(output_dir, 'assets')) # noqa
+    except NameError:
+        pass
