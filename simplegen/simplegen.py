@@ -45,6 +45,10 @@ try:
 except ImportError:
     per_page = 20
 
+try:
+    from sconfig import MINIFY_HTML
+except ImportError:
+    MINIFY_HTML = False
 
 env = Environment(
     loader=FileSystemLoader(THEME_DIR))
@@ -114,7 +118,9 @@ def _print(*args, **kwargs):
 
 def minify(func):
     def wrapper(*args):
-        return htmlmin.minify(func(*args))
+        if MINIFY_HTML: # noqa
+            return htmlmin.minify(func(*args))
+        return func(*args)
     return wrapper
 
 ##
