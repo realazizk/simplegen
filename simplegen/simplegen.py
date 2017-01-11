@@ -12,6 +12,7 @@ from sconfig import THEME_DIR # noqa
 from colorama import init as colorama_init, Fore # noqa
 from math import ceil # noqa
 import shutil # noqa
+from codecs import open as uopen
 
 
 if PY2:
@@ -135,7 +136,7 @@ class Blogger(object):
         """
 
     def save_page(self):
-        with open(os.path.join(self.output_dir, self.page_url), 'w') as myfile:
+        with uopen(os.path.join(self.output_dir, self.page_url), 'w', 'utf-8') as myfile:
             myfile.write(self.render_html())
 
 
