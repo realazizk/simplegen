@@ -212,8 +212,8 @@ class Blog(Blogger):
             paginator = Paginator(page, self.ARTICLES, per_page)
             if (page != 1):
                 self.page_url = 'index%i.html' % page
-            with open(os.path.join(self.output_dir, self.page_url),
-                      'w') as myfile:
+            with uopen(os.path.join(self.output_dir, self.page_url),
+                       'w', 'utf-8') as myfile:
                 myfile.write(self.render_html(paginator))
 
 
