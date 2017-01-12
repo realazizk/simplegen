@@ -64,6 +64,7 @@ env.globals.update(globals())
 
 from markdown.extensions.codehilite import CodeHiliteExtension # noqa
 codehilite = CodeHiliteExtension(linenums=False)
+md = markdown.Markdown(extensions=['markdown.extensions.meta', codehilite, 'markdown.extensions.tables'])
 
 
 ##
@@ -90,10 +91,7 @@ def compile_html(content_path):
     Keyword Arguments:
     content_path -- the path of the content to make.
     """
-
-    md = markdown.Markdown(extensions=['markdown.extensions.meta', codehilite])
     html = md.convert(open(content_path, 'r').read())
-
     return html, md.Meta
 
 
@@ -198,6 +196,8 @@ class Blog(Blogger):
     def add_article(self, article):
         # TODO: can get much better perfomance by just keeping the list of articles sorted
         # sort by date
+        if article.hideindex:
+            return None
         self.ARTICLES = sorted(self.ARTICLES + [article], key=lambda x: x.date)
 
     @minify
@@ -220,10 +220,12 @@ class Blog(Blogger):
 class Article(Blogger):
     URLS = {}
 
-    def __init__(self, html, title, date, output_dir, **kwargs):
+    def __init__(self, html, title, date, props, output_dir, **kwargs):
         self.output_dir = output_dir
         self.title = title
         self.html = html
+        self.hideindex = 'hideindex' in props
+
         try:
             # TODO: Change this hardcoded date layout
             self.date = datetime.strptime(date, '%d/%m/%Y %H:%M')
@@ -290,6 +292,7 @@ def make(quite=False):
             html_content,
             title=meta_content['title'][0],
             date=meta_content['date'][0],
+            props=list(map(lambda x: x.lower(), meta_content['props'][0].split(','))) if 'props' in meta_content else [],
             output_dir=output_dir)
 
         article.save_page()
