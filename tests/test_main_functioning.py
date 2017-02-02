@@ -6,7 +6,23 @@ import os
 test basic functioning of the program
 """
 
+###
+# Helper stuff
+###
 
+example_content = """Title: some title
+Date: 25/12/2016 22:23
+"""
+
+
+def makesite():
+    from simplegen.simplegen import make
+    make(quite=True)
+
+
+###
+# A pytest fixture to help make the configuration file.
+###
 @pytest.fixture(scope='session')
 def make_config(tmpdir_factory):
     # reusing function cause decorators syntax sugar lol :)
@@ -20,6 +36,8 @@ def make_config(tmpdir_factory):
             dire.mkdir('assets')
             open(str(dire.join('assets/testing.x')), 'a').close()
 
+            dire.mkdir(input_dir)
+            dire.mkdir(output_dir)
             myfile.writelines(
                 ['CONTENT_DIR=\'%s\'\n' % str(dire.join(input_dir)),
                  'OUTPUT_DIR=\'%s\'\n' % str(dire.join(output_dir)),
@@ -53,10 +71,6 @@ def test_init_site(make_config):
 def test_make_site(make_config):
     a, b = make_config
 
-    def makesite():
-        from simplegen.simplegen import make
-        make(quite=True)
-
     makesite()
 
     ##
@@ -77,3 +91,16 @@ def test_copy_assets(make_config):
     makesite()
 
     assert 'testing.x' in os.listdir(os.path.join(b.OUTPUT_DIR, 'assets'))
+
+
+def test_make_the_html(make_config):
+    a, b = make_config
+    from simplegen.simplegen import uopen
+    with uopen(os.path.join(b.CONTENT_DIR, 'example.md'), 'w', 'utf-8') as myfile:
+        myfile.write(
+            example_content
+        )
+    makesite()
+
+    # check the output directory for the maked file
+    assert 'some-title.html' in os.listdir(b.OUTPUT_DIR)
