@@ -137,3 +137,6 @@ ENV/
 .ropeproject
 
 
+readme.html
+
+test_output/
