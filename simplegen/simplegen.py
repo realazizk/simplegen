@@ -12,7 +12,7 @@ from sconfig import THEME_DIR # noqa
 from colorama import init as colorama_init, Fore # noqa
 from math import ceil # noqa
 import shutil # noqa
-from codecs import open as uopen
+from codecs import open as uopen # noqa
 
 
 if PY2:
