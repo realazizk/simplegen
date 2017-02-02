@@ -264,27 +264,12 @@ class Article(Blogger):
             article_date=self.date)
 
 
-def make(quite=False):
+def make_blog_object(content_dir=content_dir, output_dir=output_dir):
     """
-    Makes the stuff baby :)
-    quite -- for testing ?
+    Returns the blog, object.
     """
-
-    if not os.path.exists(output_dir):
-        _print('[*] Making %s.' % output_dir, quite=quite)
-        os.makedirs(output_dir)
 
     blog = Blog(output_dir)
-
-    _print(Fore.YELLOW + '[*] Cleaning output dir.', quite=quite)
-
-    if os.path.exists(output_dir):
-        for node in glob.glob(os.path.join(output_dir, '*')):
-            remove_it(node)
-
-    _print(Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir)),
-           quite=quite
-    )
 
     for content in find_content(content_dir=content_dir):
         html_content, meta_content = compile_html(content)
@@ -298,6 +283,31 @@ def make(quite=False):
         article.save_page()
         blog.add_article(article)
 
+    return blog
+
+
+def make(quite=False):
+    """
+    Makes the stuff baby :)
+    quite -- for testing ?
+    """
+
+    if not os.path.exists(output_dir):
+        _print('[*] Making %s.' % output_dir, quite=quite)
+        os.makedirs(output_dir)
+
+
+    _print(Fore.YELLOW + '[*] Cleaning output dir.', quite=quite)
+
+    if os.path.exists(output_dir):
+        for node in glob.glob(os.path.join(output_dir, '*')):
+            remove_it(node)
+
+    _print(Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir)),
+           quite=quite
+    )
+
+    blog = make_blog_object(content_dir, output_dir)
     _print(Fore.YELLOW + '[*] Linking the index.', quite=quite)
     blog.save_page()
 
