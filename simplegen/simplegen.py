@@ -10,7 +10,7 @@ import markdown # noqa
 import htmlmin # noqa
 from six import PY2 # noqa
 from datetime import datetime # noqa
-from jinja2 import Environment, FileSystemLoader # noqa
+from jinja2 import Environment, FileSystemLoader, exceptions as jexceptions # noqa
 from sconfig import THEME_DIR # noqa
 from colorama import init as colorama_init, Fore # noqa
 from math import ceil # noqa
@@ -228,6 +228,14 @@ class Blog(Blogger):
         template = env.get_template('index.html')
         return template.render(paginator=paginator)
 
+    @minify
+    def render_tag_page(self):
+        try:
+            template = env.get_template('tags.html')
+        except jexceptions.TemplateNotFound:
+            return False
+        return template.render(tags=self.tags)
+
     def save_page(self):
         self.ARTICLES = self.ARTICLES[::-1]
         for page in range(1,
@@ -241,8 +249,11 @@ class Blog(Blogger):
                 myfile.write(self.render_html(paginator))
 
         # make the tags?
-        
-        
+        html = self.render_tag_page()
+        if html:
+            with uopen(os.path.join(self.output_dir, 'tags.html'), 'w', 'utf-8') as myfile:
+                myfile.write(html)
+
     def finalizer(self):
         # sorts the articles by date
         self.ARTICLES = sorted(self.ARTICLES, key=lambda x: x.date)
