@@ -1,3 +1,6 @@
+#   Simplegen is a simple program to generate static sites
+#   Copyright (C) 2016  Mohamed Aziz Knani
+
 import sys
 import pytest
 import os

@@ -1,3 +1,6 @@
+#   Simplegen is a simple program to generate static sites
+#   Copyright (C) 2016  Mohamed Aziz Knani
+
 from __future__ import print_function
 import sys
 import glob
@@ -238,7 +241,8 @@ class Blog(Blogger):
                 myfile.write(self.render_html(paginator))
 
         # make the tags?
-
+        
+        
     def finalizer(self):
         # sorts the articles by date
         self.ARTICLES = sorted(self.ARTICLES, key=lambda x: x.date)
