@@ -12,6 +12,7 @@ test basic functioning of the program
 
 example_content = """Title: some title
 Date: 25/12/2016 22:23
+Tags: Emacs, git, python
 """
 
 
@@ -104,3 +105,17 @@ def test_make_the_html(make_config):
 
     # check the output directory for the maked file
     assert 'some-title.html' in os.listdir(b.OUTPUT_DIR)
+
+
+def test_tags_existant_in_an_article_object(make_config):
+    a, b = make_config
+    from simplegen.simplegen import uopen
+    with uopen(os.path.join(b.CONTENT_DIR, 'example.md'), 'w', 'utf-8') as myfile:
+        myfile.write(
+            example_content
+        )
+
+    from simplegen.simplegen import make_blog_object
+    blog_object = make_blog_object()
+    my_article = blog_object.ARTICLES[0]
+    assert my_article.tags == set(['Emacs', 'git', 'python'])

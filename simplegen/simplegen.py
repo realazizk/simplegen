@@ -186,19 +186,39 @@ class Paginator(object):
             return str(self.curr_page - 1)
 
 
+class TagsHandler(dict):
+    """
+    Tags Handler, subclass of dict.
+    """
+
+    def __init__(self):
+        super(TagsHandler, self).__init__()
+
+    def add_article(self, article):
+        """
+        Take article with tags and registers it
+        """
+        for eachTag in article.tags:
+            if eachTag not in self:
+                self[eachTag] = [article]
+            else:
+                self[eachTag].append(article)
+
+
 class Blog(Blogger):
     ARTICLES = []
     page_url = 'index.html'
 
     def __init__(self, output_dir):
         self.output_dir = output_dir
+        self.tags = TagsHandler()
 
     def add_article(self, article):
-        # TODO: can get much better perfomance by just keeping the list of articles sorted
-        # sort by date
+        if article.tags:
+            self.tags.add_article(article)
         if article.hideindex:
             return None
-        self.ARTICLES = sorted(self.ARTICLES + [article], key=lambda x: x.date)
+        self.ARTICLES += [article]
 
     @minify
     def render_html(self, paginator):
@@ -209,12 +229,19 @@ class Blog(Blogger):
         self.ARTICLES = self.ARTICLES[::-1]
         for page in range(1,
                           int(ceil(len(self.ARTICLES) / float(per_page))) + 1):
+            # maybe slow, making a new instance of a paginator for every article?
             paginator = Paginator(page, self.ARTICLES, per_page)
             if (page != 1):
                 self.page_url = 'index%i.html' % page
             with uopen(os.path.join(self.output_dir, self.page_url),
                        'w', 'utf-8') as myfile:
                 myfile.write(self.render_html(paginator))
+
+        # make the tags?
+
+    def finalizer(self):
+        # sorts the articles by date
+        self.ARTICLES = sorted(self.ARTICLES, key=lambda x: x.date)
 
 
 class Article(Blogger):
@@ -225,6 +252,11 @@ class Article(Blogger):
         self.title = title
         self.html = html
         self.hideindex = 'hideindex' in props
+
+        if kwargs['tags']:
+            self.tags = set(map(lambda x: x.strip(), kwargs['tags'][0].split(',')))
+        else:
+            self.tags = None
 
         try:
             # TODO: Change this hardcoded date layout
@@ -278,10 +310,13 @@ def make_blog_object(content_dir=content_dir, output_dir=output_dir):
             title=meta_content['title'][0],
             date=meta_content['date'][0],
             props=list(map(lambda x: x.lower(), meta_content['props'][0].split(','))) if 'props' in meta_content else [],
+            tags=meta_content['tags'] if 'tags' in meta_content else None,
             output_dir=output_dir)
 
         article.save_page()
         blog.add_article(article)
+
+    blog.finalizer()
 
     return blog
 
