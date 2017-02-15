@@ -146,4 +146,4 @@ If you like simpleGen and use it for your website, I would be pleased if you let
   - [X] Upload it to pypi.
   - [X] Use armin's click.
 - [X] Support Python3.
-- [ ] Add tags support.
+- [X] Add tags support.
