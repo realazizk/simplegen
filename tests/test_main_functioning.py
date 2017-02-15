@@ -122,3 +122,17 @@ def test_tags_existant_in_an_article_object(make_config):
     blog_object = make_blog_object()
     my_article = blog_object.ARTICLES[0]
     assert my_article.tags == set(['Emacs', 'git', 'python'])
+
+
+def test_tags_render_tags_file(make_config):
+    a, b = make_config
+    from simplegen.simplegen import uopen
+
+    with uopen(os.path.join(b.CONTENT_DIR, 'example.md'), 'w', 'utf-8') as myfile:
+        myfile.write(
+            example_content
+        )
+
+    from simplegen.simplegen import make_blog_object
+    blog_object = make_blog_object()
+    assert blog_object.render_tag_page() is not False
