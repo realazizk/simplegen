@@ -82,7 +82,7 @@ def test_make_site(make_config):
     # assert for the output
     ##
 
-    assert os.listdir(b.OUTPUT_DIR) == ['assets', 'tags.html']
+    assert set(os.listdir(b.OUTPUT_DIR)) == set(['assets', 'tags.html'])
     assert os.listdir(os.path.join(b.OUTPUT_DIR, 'assets')) != []
 
 
