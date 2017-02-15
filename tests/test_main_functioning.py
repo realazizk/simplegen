@@ -43,10 +43,11 @@ def make_config(tmpdir_factory):
             dire.mkdir(input_dir)
             dire.mkdir(output_dir)
             myfile.writelines(
-                ['CONTENT_DIR=\'%s\'\n' % str(dire.join(input_dir)),
-                 'OUTPUT_DIR=\'%s\'\n' % str(dire.join(output_dir)),
-                 'THEME_DIR=\'%s\'\n' % os.path.join(os.getcwd(), 'example_path'),
-                 'ASSETS_PATH=\'%s\'\n' % str(dire.join('assets'))
+                [
+                    'CONTENT_DIR=\'%s\'\n' % str(dire.join(input_dir)),
+                    'OUTPUT_DIR=\'%s\'\n' % str(dire.join(output_dir)),
+                    'THEME_DIR=\'%s\'\n' % os.path.join(os.getcwd(), 'example_path'),
+                    'ASSETS_PATH=\'%s\'\n' % str(dire.join('assets'))
                 ]
             )
 
