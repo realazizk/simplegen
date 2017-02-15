@@ -1,4 +1,5 @@
-
+### Status
+[![Build Status](https://travis-ci.org/mohamed-aziz/simplegen.png)](https://travis-ci.org/mohamed-aziz/simplegen)
 
 ## simpleGen
 
