@@ -9,23 +9,23 @@ simpleGen *is a simple static website/blog generator* that just does what it is 
 
 I built simpleGen beceause I needed something dead simple to make my static sites, I could have used something like pelican or jekyll but I think they are bloated so hacking on the code will be some much harder, simpleGen is about 200 lines of python code.
 
-simpleGen does not do things it not intended to do, instead it does just what a sane person wants from a site generator, TO GENERATE THE DAMN MARKDOWN (or whatever markup language you use), simpleGen does not provide solutions to deploy the static content, or providing a development server, that is another problem that I think does not overlap with the basic functioning of a static website generator. 
+simpleGen does not do things it not intended to do, instead it does just what a sane person wants from a site generator, TO GENERATE THE DAMN MARKDOWN (or whatever markup language you use), simpleGen does not provide solutions to deploy the static content, or providing a development server, that is another problem that I think does not overlap with the basic functioning of a static website generator.
 
 ### Installing simplegen.
 
 You can install simpleGen from the Python package index using pip (I maintain this package).
-	
+
 	$ pip install simplegen
 
 or you could get it from github using (using the https protocol) using
 
 	$ pip install git+https://github.com/mohamed-aziz/simplegen.git
-	
+
 you also can install the development version from the development branch using
 
 	$ pip install git+https://github.com/mohamed-aziz/simplegen.git@development
 
-Grab a coffee (or two if you have slow connection). 
+Grab a coffee (or two if you have slow connection).
 
 And then you want to initialize the site config, so use:
 
@@ -121,12 +121,12 @@ My folder looks like this:
 
 I also version control my markdown files which is also nice.
 
-If you don't like git (or versioning) just write some fabric file to do the deploy for your site. 
+If you don't like git (or versioning) just write some fabric file to do the deploy for your site.
 
 ### Testing
 
 You can test the code using:
-	
+
 	$ mktmpenv
 	$ git clone https://github.com/mohamed-aziz/simplegen.git
 	$ cd simplegen
@@ -136,6 +136,16 @@ You can test the code using:
 ### Get in touch
 
 If you like simpleGen and use it for your website, I would be pleased if you let me know, also pull requests are welcome :)
+
+
+### License
+[![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](http://www.gnu.org/licenses/gpl-3.0.en.html)
+
+SimpleGen is Free Software: You can use, study share and improve it at your
+will. Specifically you can redistribute and/or modify it under the terms of the
+[GNU General Public License](https://www.gnu.org/licenses/gpl.html) as
+published by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
 
 ### Todo
