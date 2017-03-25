@@ -67,7 +67,7 @@ env.globals.update(globals())
 
 from markdown.extensions.codehilite import CodeHiliteExtension # noqa
 codehilite = CodeHiliteExtension(linenums=False)
-md = markdown.Markdown(extensions=['markdown.extensions.meta', codehilite, 'markdown.extensions.tables'])
+md = markdown.Markdown(extensions=['markdown.extensions.meta', codehilite, 'markdown.extensions.tables', 'mdx_math'])
 
 
 ##
