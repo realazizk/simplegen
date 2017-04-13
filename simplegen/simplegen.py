@@ -229,6 +229,14 @@ class Blog(Blogger):
         return template.render(paginator=paginator)
 
     @minify
+    def render_archive_page(self):
+        try:
+            template = env.get_template('archive.html')
+        except jexceptions.TemplateNotFound:
+            return False
+        return template.render(articles=self.ARTICLES)
+
+    @minify
     def render_tag_page(self):
         try:
             template = env.get_template('tags.html')
@@ -252,6 +260,12 @@ class Blog(Blogger):
         html = self.render_tag_page()
         if html:
             with uopen(os.path.join(self.output_dir, 'tags.html'), 'w', 'utf-8') as myfile:
+                myfile.write(html)
+
+        # make the archive
+        html = self.render_archive_page()
+        if html:
+            with uopen(os.path.join(self.output_dir, 'archive.html'), 'w', 'utf-8') as myfile:
                 myfile.write(html)
 
     def finalizer(self):

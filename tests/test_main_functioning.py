@@ -82,7 +82,7 @@ def test_make_site(make_config):
     # assert for the output
     ##
 
-    assert set(os.listdir(b.OUTPUT_DIR)) == set(['assets', 'tags.html'])
+    assert set(os.listdir(b.OUTPUT_DIR)) == set(['assets', 'tags.html', 'archive.html'])
     assert os.listdir(os.path.join(b.OUTPUT_DIR, 'assets')) != []
 
 
@@ -109,6 +109,18 @@ def test_make_the_html(make_config):
 
     # check the output directory for the maked file
     assert 'some-title.html' in os.listdir(b.OUTPUT_DIR)
+
+def test_make_archive(make_config):
+    a, b = make_config
+    from simplegen.simplegen import uopen
+    with uopen(os.path.join(b.CONTENT_DIR, 'example.md'), 'w', 'utf-8') as myfile:
+        myfile.write(
+            example_content
+        )
+    makesite()
+
+    # check the output directory for the maked file
+    assert 'archive.html' in os.listdir(b.OUTPUT_DIR)
 
 
 def test_tags_existant_in_an_article_object(make_config):
