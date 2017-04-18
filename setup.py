@@ -11,7 +11,7 @@ reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
     name='simplegen',
-    version='1.0.0',
+    version='1.0.1',
     install_requires=reqs,
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
