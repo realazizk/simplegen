@@ -393,7 +393,8 @@ class Article(Blogger):
         return template.render(
             article_content=self.html,
             article_title=self.title,
-            article_date=self.date)
+            article_date=self.date,
+            article_tags=self.tags)
 
 
 def make_blog_object(content_dir=content_dir, output_dir=output_dir):
