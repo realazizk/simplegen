@@ -7,7 +7,7 @@ simpleGen *is a simple static website/blog generator* that just does what it is 
 
 ### The philosophy behind simpleGen
 
-I built simpleGen beceause I needed something dead simple to make my static sites, I could have used something like pelican or jekyll but I think they are bloated so hacking on the code will be some much harder, simpleGen is about 200 lines of python code.
+I built simpleGen beceause I needed something dead simple to make my static sites, I could have used something like pelican or jekyll but I think they are bloated so hacking on the code will be some much harder, simpleGen is about 400 lines of python code.
 
 simpleGen does not do things it not intended to do, instead it does just what a sane person wants from a site generator, TO GENERATE THE DAMN MARKDOWN (or whatever markup language you use), simpleGen does not provide solutions to deploy the static content, or providing a development server, that is another problem that I think does not overlap with the basic functioning of a static website generator.
 
@@ -31,7 +31,7 @@ And then you want to initialize the site config, so use:
 
 	$ initsite input_dir output_dir
 
-a config file with name sconfig.py will be generated, edit that with what suits you and your theme
+A config file with name sconfig.py will be generated, edit that with what suits you and your theme
 you are using or planning to make.
 
 then you can write you content in markdown in the input_dir, then run:
@@ -128,7 +128,7 @@ If you don't like git (or versioning) just write some fabric file to do the depl
 You can test the code using:
 
 	$ mktmpenv
-	$ git clone https://github.com/mohamed-aziz/simplegen.git
+	$ git clone --recursive https://github.com/mohamed-aziz/simplegen.git
 	$ cd simplegen
 	$ python setup.py test
 
