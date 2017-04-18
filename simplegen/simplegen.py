@@ -390,10 +390,7 @@ class Article(Blogger):
     def render_html(self):
         # TODO: Change this hardcoded article file name.
         template = env.get_template('article.html')
-        return template.render(
-            article_content=self.html,
-            article_title=self.title,
-            article_date=self.date)
+        return template.render(article=self)
 
 
 def make_blog_object(content_dir=content_dir, output_dir=output_dir):
