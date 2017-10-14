@@ -68,7 +68,8 @@ env.globals.update(globals())
 
 from markdown.extensions.codehilite import CodeHiliteExtension # noqa
 codehilite = CodeHiliteExtension(linenums=False)
-md = markdown.Markdown(extensions=['markdown.extensions.meta', codehilite, 'markdown.extensions.tables', 'mdx_math'])
+md = markdown.Markdown(extensions=['markdown.extensions.meta', codehilite,
+                       'markdown.extensions.tables', 'mdx_math'])
 
 
 ##
@@ -138,7 +139,8 @@ class Blogger(object):
         """
 
     def save_page(self):
-        with uopen(os.path.join(self.output_dir, self.page_url), 'w', 'utf-8') as myfile:
+        with uopen(os.path.join(self.output_dir, self.page_url),
+                   'w', 'utf-8') as myfile:
             myfile.write(self.render_html())
 
 
@@ -254,7 +256,7 @@ class CaseInsensitiveDict(collections.MutableMapping):
 
     # Copy is required
     def copy(self):
-         return CaseInsensitiveDict(self._store.values())
+        return CaseInsensitiveDict(self._store.values())
 
     def __repr__(self):
         return '%s(%r)' % (self.__class__.__name__, dict(self.items()))
@@ -319,7 +321,8 @@ class Blog(Blogger):
         self.ARTICLES = self.ARTICLES[::-1]
         for page in range(1,
                           int(ceil(len(self.ARTICLES) / float(per_page))) + 1):
-            # maybe slow, making a new instance of a paginator for every article?
+            # maybe slow, making a new instance of a
+            # paginator for every article?
             paginator = Paginator(page, self.ARTICLES, per_page)
             if (page != 1):
                 self.page_url = 'index%i.html' % page
@@ -330,13 +333,15 @@ class Blog(Blogger):
         # make the tags?
         html = self.render_tag_page()
         if html:
-            with uopen(os.path.join(self.output_dir, 'tags.html'), 'w', 'utf-8') as myfile:
+            with uopen(os.path.join(self.output_dir, 'tags.html'),
+                       'w', 'utf-8') as myfile:
                 myfile.write(html)
 
         # make the archive
         html = self.render_archive_page()
         if html:
-            with uopen(os.path.join(self.output_dir, 'archive.html'), 'w', 'utf-8') as myfile:
+            with uopen(os.path.join(self.output_dir, 'archive.html'),
+                       'w', 'utf-8') as myfile:
                 myfile.write(html)
 
     def finalizer(self):
@@ -354,7 +359,8 @@ class Article(Blogger):
         self.hideindex = 'hideindex' in props
 
         if kwargs['tags']:
-            self.tags = set(map(lambda x: x.strip(), kwargs['tags'][0].split(',')))
+            self.tags = set(map(lambda x: x.strip(),
+                                kwargs['tags'][0].split(',')))
         else:
             self.tags = None
 
@@ -406,7 +412,9 @@ def make_blog_object(content_dir=content_dir, output_dir=output_dir):
             html_content,
             title=meta_content['title'][0],
             date=meta_content['date'][0],
-            props=list(map(lambda x: x.lower(), meta_content['props'][0].split(','))) if 'props' in meta_content else [],
+            props=list(map(lambda x: x.lower(),
+                           meta_content['props'][0].split(','))
+                       ) if 'props' in meta_content else [],
             tags=meta_content['tags'] if 'tags' in meta_content else None,
             output_dir=output_dir)
 
@@ -428,16 +436,14 @@ def make(quite=False):
         _print('[*] Making %s.' % output_dir, quite=quite)
         os.makedirs(output_dir)
 
-
     _print(Fore.YELLOW + '[*] Cleaning output dir.', quite=quite)
 
     if os.path.exists(output_dir):
         for node in glob.glob(os.path.join(output_dir, '*')):
             remove_it(node)
 
-    _print(Fore.YELLOW + '[*] Buidling %i page.' % len(find_content(content_dir=content_dir)),
-           quite=quite
-    )
+    _print(Fore.YELLOW + '[*] Buidling %i page.' %
+           len(find_content(content_dir=content_dir)), quite=quite)
 
     blog = make_blog_object(content_dir, output_dir)
     _print(Fore.YELLOW + '[*] Linking the index.', quite=quite)
