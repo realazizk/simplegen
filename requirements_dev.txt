@@ -11,7 +11,7 @@ importmagic==0.1.7
 ipython==5.1.0
 ipython-genutils==0.1.0
 jedi==0.9.0
-Jinja2==2.8
+Jinja2==2.11.3
 Markdown==2.6.7
 MarkupSafe==0.23
 mccabe==0.5.2

@@ -1,7 +1,7 @@
 click==6.6
 colorama==0.3.7
 htmlmin==0.1.10
-Jinja2==2.8
+Jinja2==2.11.3
 Markdown==2.6.7
 pytest==3.0.4
 six==1.10.0
